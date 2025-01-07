@@ -1,10 +1,10 @@
-# iMessage Query MCP Server
+# macOS Contacts and iMessage Query Tools
 
-An MCP server that provides safe access to your iMessage database through Model Context Protocol (MCP). This server is built with the FastMCP framework and the imessagedb library, enabling LLMs to query and analyze iMessage conversations with proper phone number validation and attachment handling.
+A collection of Python tools for safely accessing and exporting data from macOS Contacts and iMessage databases. This includes tools for exporting contacts to JSON format and querying iMessage conversations.
 
 ## 📋 System Requirements
 
-- macOS (required for iMessage database access)
+- macOS (required for Contacts and iMessage database access)
 - Python 3.6+
 
 ## 📦 Dependencies
@@ -12,103 +12,84 @@ An MCP server that provides safe access to your iMessage database through Model 
 Install all required dependencies:
 
 ```bash
-# Using pip
 pip install -r requirements.txt
 ```
 
 ### Required Packages
-- **fastmcp**: Framework for building Model Context Protocol servers
 - **imessagedb**: Python library for accessing and querying the macOS Messages database
 - **phonenumbers**: Google's phone number handling library for proper number validation and formatting
 
 All dependencies are specified in `requirements.txt` for easy installation.
 
-## 📑 Table of Contents
-- [System Requirements](#-system-requirements)
-- [Dependencies](#-dependencies)
-- [MCP Tools](#%EF%B8%8F-mcp-tools)
-- [Getting Started](#-getting-started)
-- [Installation Options](#-installation-options)
-  - [Claude Desktop](#option-1-install-for-claude-desktop)
-  - [Cline VSCode Plugin](#option-2-install-for-cline-vscode-plugin)
-- [Safety Features](#-safety-features)
-- [Development Documentation](#-development-documentation)
-- [Environment Variables](#%EF%B8%8F-environment-variables)
+## 📑️ Features
 
-## 🛠️ MCP Tools
+### Contacts Export
+The `export_contacts.py` script provides:
+- Export of all macOS Contacts to JSON format
+- Phone numbers and email addresses for each contact
+- Proper handling of multiple phone numbers/emails per contact
+- Unicode character support
+- Maintains original phone number formatting
+- Filters out contacts with no phone or email
 
-The server exposes the following tools to LLMs:
-
-### get_chat_transcript
-Retrieve message history for a specific phone number with optional date filtering. Includes:
-- Message text and timestamps
-- Attachment information (if any)
-- Proper phone number validation
+### iMessage Query
+Support for querying iMessage conversations with:
+- Lookup by name
+- Message history retrieval
+- Attachment information
 - Date range filtering
+- Phone number validation
 
 ## 🚀 Getting Started
 
-Clone the repository:
-
+1. Clone the repository:
 ```bash
-git clone https://github.com/hannesrudolph/imessage-query-fastmcp-mcp-server.git
-cd imessage-query-fastmcp-mcp-server
+git clone https://github.com/yourusername/immesage-query-mcp-server.git
+cd immesage-query-mcp-server
 ```
 
-## 📦 Installation Options
-
-You can install this MCP server in either Claude Desktop or the Cline VSCode plugin. Choose the option that best suits your needs.
-
-### Option 1: Install for Claude Desktop
-
-Install using FastMCP:
-
+2. Install dependencies:
 ```bash
-fastmcp install imessage-query-server.py --name "iMessage Query"
+pip install -r requirements.txt
 ```
 
-### Option 2: Install for Cline VSCode Plugin
+3. Export your contacts:
+```bash
+python export_contacts.py
+```
 
-To use this server with the [Cline VSCode plugin](http://cline.bot):
-
-1. In VSCode, click the server icon (☰) in the Cline plugin sidebar
-2. Click the "Edit MCP Settings" button (✎)
-3. Add the following configuration to the settings file:
-
+This will create a `contacts_map.json` file with all your contacts in the following format:
 ```json
 {
-  "imessage-query": {
-    "command": "uv",
-    "args": [
-      "run",
-      "--with",
-      "fastmcp",
-      "fastmcp",
-      "run",
-      "/path/to/repo/imessage-query-server.py"
+  "Contact Name": {
+    "phones": [
+      "+1234567890",
+      "123-456-7890"
+    ],
+    "emails": [
+      "email@example.com"
     ]
   }
 }
 ```
 
-Replace `/path/to/repo` with the full path to where you cloned this repository (e.g., `/Users/username/Projects/imessage-query-fastmcp-mcp-server`)
-
 ## 🔒 Safety Features
 
-- Read-only access to the iMessage database
-- Phone number validation using the phonenumbers library
-- Safe attachment handling with missing file detection
-- Date range validation
-- Progress output suppression for clean JSON responses
+- Read-only access to system databases
+- No modification of original data
+- Safe handling of Unicode characters
+- Duplicate entry prevention
+- Error handling for missing or inaccessible files
 
-## 📚 Development Documentation
+## ⚙️ System Access Requirements
 
-The repository includes documentation files for development:
+The script requires access to:
+- `~/Library/Application Support/AddressBook/Sources/`: Location of the Contacts database
+- Terminal/IDE needs "Full Disk Access" in System Preferences > Security & Privacy > Privacy
 
-- `dev_docs/imessagedb-documentation.txt`: Contains comprehensive documentation about the iMessage database structure and the imessagedb library's capabilities.
+## 📚 Development
 
-This documentation serves as context when developing features and can be used with LLMs to assist in development.
-
-## ⚙️ Environment Variables
-
-No environment variables are required as the server automatically locates the iMessage database in the default macOS location.
+The main components are:
+- `export_contacts.py`: Script for exporting contacts to JSON
+- `requirements.txt`: Project dependencies
+- `contacts_map.json`: Generated contacts export file
